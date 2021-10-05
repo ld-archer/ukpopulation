@@ -22,7 +22,7 @@ class SNHPData:
         self.data = {}
         self.data[utils.EN] = self.__do_england()
         self.data[utils.WA] = self.__do_wales()
-        self.data[utils.SC] = self.__do_scotland()
+        #self.data[utils.SC] = self.__do_scotland()
         self.data[utils.NI] = self.__do_nireland()
 
     def unified(self):
