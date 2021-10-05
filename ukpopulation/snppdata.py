@@ -23,7 +23,7 @@ class SNPPData:
         self.data = {}
         self.data[utils.EN] = self.__do_england()
         self.data[utils.WA] = self.__do_wales()
-        self.data[utils.SC] = self.__do_scotland()
+        #self.data[utils.SC] = self.__do_scotland()
         self.data[utils.NI] = self.__do_nireland()
 
         # LADs * 26 years * 91 ages * 2 genders
