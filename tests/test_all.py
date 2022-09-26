@@ -91,6 +91,16 @@ class Test(unittest.TestCase):
         self.assertEqual(2018, self.mye.max_year())
 
         year = 2011
+        self.assertEqual(105726, self.mye.aggregate(["GENDER", "C_AGE"], "E06000005", year).OBS_VALUE.sum())
+        self.assertEqual(105726, self.mye.filter("E06000005", year).OBS_VALUE.sum())
+
+        self.assertEqual(51423, self.mye.aggregate(["GENDER", "C_AGE"], "E06000005", year, genders=1).OBS_VALUE.sum())
+        self.assertEqual(51423, self.mye.filter("E06000005", year, genders=1).OBS_VALUE.sum())
+
+        self.assertEqual(76441,
+                         self.mye.aggregate(["GENDER", "C_AGE"], "E06000005", year, ages=range(16, 75)).OBS_VALUE.sum())
+        self.assertEqual(76441, self.mye.filter("E06000005", year, ages=range(16, 75)).OBS_VALUE.sum())
+        """
         self.assertEqual(7412, self.mye.aggregate(["GENDER", "C_AGE"], "E09000001", year).OBS_VALUE.sum())
         self.assertEqual(7412, self.mye.filter("E09000001", year).OBS_VALUE.sum())
 
@@ -99,6 +109,7 @@ class Test(unittest.TestCase):
 
         self.assertEqual(6333, self.mye.aggregate(["GENDER", "C_AGE"], "E09000001", year, ages=range(16, 75)).OBS_VALUE.sum())
         self.assertEqual(6333, self.mye.filter("E09000001", year, ages=range(16, 75)).OBS_VALUE.sum())
+        """
 
     # def test_snpp(self):
     #
@@ -152,11 +163,11 @@ class Test(unittest.TestCase):
         # invalid variant code
         # self.assertRaises(RuntimeError, self.snpp.filter, "xxx", utils.UK, [2016])
         # invalid column name
-        self.assertRaises(ValueError, self.snpp.aggregate, ["INVALID_CAT"], ["E06000001", "S12000041"], [2016])
+        self.assertRaises(ValueError, self.snpp.aggregate, ["INVALID_CAT"], ["E06000001", "S12000041"], [2018])
         self.assertRaises(ValueError, self.snpp.aggregate, ["GENDER", "PROJECTED_YEAR_NAME"],
-                          ["E06000001", "S12000041"], [2016])
+                          ["E06000001", "S12000041"], [2018])
         # invalid year
-        self.assertRaises(ValueError, self.snpp.filter, ["E06000001", "S12000041"], [2040])
+        self.assertRaises(ValueError, self.snpp.filter, ["E06000001", "S12000041"], [2044])
 
         # check we get an error if an invalid LAD code is used
         self.assertRaises(ValueError, self.snpp.aggregate, ["GENDER", "C_AGE"], "E07000097", 2030)
