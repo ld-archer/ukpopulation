@@ -28,6 +28,7 @@ class MYEData:
         # store as a dictionary keyed by year (lazy retrieval)
         self.data = {}
 
+
     def min_year(self):
         """
     Returns the first year in the data
@@ -88,6 +89,7 @@ class MYEData:
             return
 
         table_internal = "NM_2002_1"  # 2018-based MYE
+
         query_params = {
             "gender": "1,2",
             "c_age": "101...191",
@@ -95,6 +97,7 @@ class MYEData:
             "select": "geography_code,gender,c_age,obs_value",
             "geography": "1879048193...1879048573,1879048583,1879048574...1879048582"
         }
+
 
         if year < MYEData.MIN_YEAR or year > MYEData.MAX_YEAR:
             raise ValueError("{} is outside the available years for MYE data ({}-{})".format(year, MYEData.MIN_YEAR,

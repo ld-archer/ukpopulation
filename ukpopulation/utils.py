@@ -55,7 +55,8 @@ def default_cache_dir():
     Default cache dir location, ensures the path exists (failing if it cannot create)
     This *should* work on all platforms
     """
-    cache_dir = str(Path.home() / ".ukpopulation/cache")
+    #cache_dir = str(Path.home() / ".ukpopulation/cache")
+    cache_dir = os.path.abspath('../cache')
 
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)

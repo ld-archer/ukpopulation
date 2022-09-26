@@ -133,7 +133,7 @@ class SNHPData:
             url += "&$filter=Variant_Code eq 1 and Area_Hierarchy eq 'W92000004'"  # Householdtype_ItemName_ENG
             data = []
             while True:
-                print(url)
+                #print(url)
                 r = requests.get(url)
                 r.raise_for_status()
                 r_data = r.json()

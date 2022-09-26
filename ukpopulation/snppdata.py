@@ -266,21 +266,25 @@ class SNPPData:
 
     def __do_wales(self):
         print("Collating SNPP data for Wales...")
-        cache_dir = utils.default_cache_dir()
+        #cache_dir = utils.default_cache_dir()
+        #cache_dir = self.cache_dir
 
-        wales_raw = cache_dir + "/snpp_w.csv"
+        wales_raw = self.cache_dir + "/snpp_w.csv"
         if os.path.isfile(wales_raw):
             snpp_w = pd.read_csv(wales_raw)
         else:
-            fields = ['Area_AltCode1', 'Year_Code', 'Data', 'Gender_Code', 'Age_Code', 'Area_Hierarchy', 'Variant_Code']
+            #fields = ['Area_AltCode1', 'Year_Code', 'Data', 'Gender_Code', 'Age_Code', 'Area_Hierarchy', 'Variant_Code']
+            fields = ['Area_AltCode1', 'Year_Code', 'Data', 'Sex_Code', 'Age_Code', 'Area_Hierarchy', 'Variant_Code']
             # StatsWales is an OData endpoint, so select fields of interest
             url = "http://open.statswales.gov.wales/dataset/popu6010?$select={}".format(",".join(fields))
+            #url = "http://open.statswales.gov.wales/dataset/popu6010"
             # use OData syntax to filter P (persons), AllAges (all ages), Area_Hierarchy 691 (LADs)
-            url += "&$filter=Gender_Code ne 'P' and Area_Hierarchy gt 690 and Area_Hierarchy lt 694 and Variant_Code eq 'Principal'"
+            url += "&$filter=Sex_Code ne 'P' and Area_Hierarchy gt 690 and Area_Hierarchy lt 694 and Variant_Code eq 'Principal'"
+            #url += "&$filter=Area_Hierarchy gt 690 and Area_Hierarchy lt 694 and Variant_Code eq 'Principal'"
             #
             data = []
             while True:
-                print(url)
+                #print(url)
                 r = requests.get(url)
                 r_data = r.json()
                 data += r_data['value']
@@ -295,7 +299,7 @@ class SNPPData:
             snpp_w = snpp_w.rename(columns={"Age_Code": "C_AGE",
                                             "Area_AltCode1": "GEOGRAPHY_CODE",
                                             "Data": "OBS_VALUE",
-                                            "Gender_Code": "GENDER",
+                                            "Sex_Code": "GENDER",
                                             "Year_Code": "PROJECTED_YEAR_NAME"})
             # Remove all but SYOA and make numeric
             snpp_w = snpp_w[(snpp_w.C_AGE != "AllAges") & (snpp_w.C_AGE != "00To15") & (snpp_w.C_AGE != "16To64") & (
@@ -358,7 +362,7 @@ class SNPPData:
         if os.path.isfile(scotland_raw):
             snpp_s = pd.read_csv(scotland_raw)
         else:
-            headers = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:92.0) Gecko/20100101 Firefox/92.0'}
+            headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:105.0) Gecko/20100101 Firefox/105.0'}
             response = requests.get(scotland_src, headers=headers)
             with open(scotland_zip, 'wb') as fd:
                 for chunk in response.iter_content(chunk_size=1024):
