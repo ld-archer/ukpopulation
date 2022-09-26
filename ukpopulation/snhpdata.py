@@ -242,7 +242,8 @@ class SNHPData:
                 chunk = chunk.groupby(["Unnamed: 0", "variable"]).sum().reset_index().rename(
                     {"Unnamed: 0": "HOUSEHOLD_TYPE", "variable": "PROJECTED_YEAR_NAME", "value": "OBS_VALUE"}, axis=1)
                 chunk.insert(0, "GEOGRAPHY_CODE", lookup[council_area])
-                snhp_s = snhp_s.append(chunk, ignore_index=True)
+                #snhp_s = snhp_s.append(chunk, ignore_index=True)
+                snhp_s = pd.concat([snhp_s, chunk], ignore_index=True)
             snhp_s.to_csv(scotland_processed, index=False)
 
         return snhp_s
@@ -279,7 +280,8 @@ class SNHPData:
                     axis=1)
 
                 data.insert(0, "GEOGRAPHY_CODE", d)
-                snhp_ni = snhp_ni.append(data, ignore_index=True)
+                #snhp_ni = snhp_ni.append(data, ignore_index=True)
+                snhp_ni = pd.concat([snhp_ni, data], ignore_index=True)
 
             snhp_ni.to_csv(ni_processed, index=False)
 

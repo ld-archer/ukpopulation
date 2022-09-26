@@ -214,7 +214,8 @@ class SNPPData:
         snpp_e = self.data_api.get_data(table_internal, query_params)
 
         query_params["projected_year"] = "2032...2043"
-        snpp_e = snpp_e.append(self.data_api.get_data(table_internal, query_params))
+        #snpp_e = snpp_e.append(self.data_api.get_data(table_internal, query_params))
+        snpp_e = pd.concat([snpp_e, self.data_api.get_data(table_internal, query_params)])
         # make age actual year
         snpp_e.C_AGE = snpp_e.C_AGE - 101
 
@@ -405,7 +406,8 @@ class SNPPData:
                     appendable_chunk = chunk[["GEOGRAPHY_CODE", "C_AGE", str(year), "GENDER"]].rename(
                         columns={str(year): "OBS_VALUE"})
                     appendable_chunk["PROJECTED_YEAR_NAME"] = year
-                    snpp_s = snpp_s.append(appendable_chunk)
+                    #snpp_s = snpp_s.append(appendable_chunk)
+                    snpp_s = pd.concat([snpp_s, appendable_chunk])
             snpp_s.reset_index(drop=True)
             snpp_s['OBS_VALUE'] = snpp_s['OBS_VALUE'].str.replace(',', '')
             snpp_s['OBS_VALUE'] = pd.to_numeric(snpp_s['OBS_VALUE'])
@@ -465,8 +467,10 @@ class SNPPData:
                 dff["GEOGRAPHY_CODE"] = pd.Series(area_code, dff.index)
                 dff.loc[dff.C_AGE == "90+", "C_AGE"] = 90
 
-                snpp_ni = snpp_ni.append(dfm)
-                snpp_ni = snpp_ni.append(dff)
+                #snpp_ni = snpp_ni.append(dfm)
+                #snpp_ni = snpp_ni.append(dff)
+                snpp_ni = pd.concat([snpp_ni, dfm])
+                snpp_ni = pd.concat([snpp_ni, dff])
 
             # assert(len(snpp_ni) == 26*2*91*11) # 11 districts x 91 ages x 2 genders x 26 years
             snpp_ni.to_csv(ni_raw, index=False)

@@ -188,7 +188,8 @@ class NPPData:
         pop90plus["C_AGE"] = 90
 
         # remove the aggregated categories from the original and append the aggregate
-        ppp = ppp[ppp.C_AGE < 90].append(pop90plus, ignore_index=True, sort=False)
+        #ppp = ppp[ppp.C_AGE < 90].append(pop90plus, ignore_index=True, sort=False)
+        ppp = pd.concat([ppp[ppp.C_AGE < 90], pop90plus], ignore_index=True, sort=False)
 
         return ppp
 
@@ -262,13 +263,15 @@ class NPPData:
                 # print(df.columns)
                 # print(dfagg.columns)
                 # remove the aggregated categories from the original and append the aggregate
-                df = df[~df.C_AGE.isin(a)].append(dfagg, ignore_index=True)
+                #df = df[~df.C_AGE.isin(a)].append(dfagg, ignore_index=True)
+                df = pd.concat([df[~df.C_AGE.isin(a)], dfagg], ignore_index=True)
 
                 # add the country code
                 df["GEOGRAPHY_CODE"] = utils.CODES[country]
 
                 # df.to_csv(vcsv, index=None)
-                self.data[variant_name] = self.data[variant_name].append(df, ignore_index=True)
+                #self.data[variant_name] = self.data[variant_name].append(df, ignore_index=True)
+                self.data[variant_name] = pd.concat([self.data[variant_name], df], ignore_index=True)
 
             # step 3: save preprocessed data
             self.data[variant_name].to_csv(dataset, index=None)
